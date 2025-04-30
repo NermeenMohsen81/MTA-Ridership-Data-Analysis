@@ -1,0 +1,288 @@
+use MTA_Ridership
+
+Q1 ----------  ازاي نعمل تنظيف للبيانات 
+select*
+from MTA_Daily_Ridership
+where 'Date' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Day_Name' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Month' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Year' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Subways_Total_Ridership' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Subways_Prepandemic' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Buses_Total_Ridership' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Buses_Prepandemic' is null
+
+select*
+from MTA_Daily_Ridership
+where 'AAR_Total_Ridership' is null
+
+select*
+from MTA_Daily_Ridership
+where 'AAR_Prepandemic' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Bridges_Tunnels_Total_Ridership' is null
+
+select*
+from MTA_Daily_Ridership
+where 'Bridges_Tunnels_Prepandemic' is null
+
+select*
+from MTA_Daily_Ridership
+where 'LIRR_Total_Ridership' is null
+
+select*
+from MTA_Daily_Ridership
+where 'LIRR_Prepandemic' is null
+
+select*
+from MTA_Daily_Ridership
+where 'MNR_Total_Ridership' is null
+
+select*
+from MTA_Daily_Ridership
+where 'MNR_Prepandemic' is null
+
+select*
+from MTA_Daily_Ridership
+where 'SIR_Total_Ridership' is null
+
+select*
+from MTA_Daily_Ridership
+where 'SIR_Prepandemic' is null
+
+
+----------
+Q1--------- What is the total ridership for each transport type year by year? 
+-----------"ما هو اجمالي عدد الركاب لكل وسائل النقل كل عام؟"
+
+select Year,
+SUM(Subways_Total_Ridership) as 'Subways Passengers',
+SUM(Buses_Total_Ridership) as 'Buses Passengers',
+SUM(AAR_Total_Ridership) as 'AAR Passengers',
+SUM(Bridges_Tunnels_Total_Ridership) as 'Bridges_Tunnels Passengers',
+SUM(LIRR_Total_Ridership) as 'LIRR Passengers',
+SUM(MNR_Total_Ridership) as 'MNR Passengers',
+SUM(SIR_Total_Ridership) as 'SIR Passengers'
+from MTA_Daily_Ridership
+group by Year
+order by Year asc
+
+Q2 ------- What is the average ridership for each transport type? 
+----------" ما هو متوسط عدد الركاب لكل وسائل النقل؟"
+
+select 
+AVG(Subways_Total_Ridership) as 'Average Subways Passengers',
+AVG(Buses_Total_Ridership) as 'Average Buses Passengers',
+AVG(AAR_Total_Ridership) as 'Average AAR Passengers',
+AVG(Bridges_Tunnels_Total_Ridership) as 'Average Bridges_Tunnels Passengers',
+AVG(LIRR_Total_Ridership) as 'Average LIRR Passengers',
+AVG(MNR_Total_Ridership) as 'Average MNR Passengers',
+AVG(SIR_Total_Ridership) as 'Average SIR Passengers'
+from MTA_Daily_Ridership
+
+
+Q3 ----- Compare between the average weekday ridership vs average weekend ridership for each transportation mode? 
+--------" قارن بين متوسط عدد الركاب خلال أيام الأسبوع و متوسط عدد الركاب خلال إجازة الأسبوع بالنسبة لكل وسائل النقل؟"
+
+select 
+AVG(Subways_Total_Ridership) as 'Average Subways Passengers',
+AVG(Buses_Total_Ridership) as 'Average Buses Passengers',
+AVG(AAR_Total_Ridership) as 'Average AAR Passengers',
+AVG(Bridges_Tunnels_Total_Ridership) as 'Average Bridges_Tunnels Passengers',
+AVG(LIRR_Total_Ridership) as 'Average LIRR Passengers',
+AVG(MNR_Total_Ridership) as 'Average MNR Passengers',
+AVG(SIR_Total_Ridership) as 'Average SIR Passengers',
+case
+when Day_Name in ('Saturday', 'Sunday') then 'Weekend'
+when Day_Name in ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday') then 'Weekday'
+else 'weekday'
+end as 'Day_Type' 
+from MTA_Daily_Ridership
+group by case
+when Day_Name in ('Saturday', 'Sunday') then 'Weekend'
+when Day_Name in ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday') then 'Weekday'
+else 'weekday'
+end
+
+Q4 -------How did ridership recovery compare to pre-pandemic levels month by month? 
+----------"كيف كانت وتيرة تعافي عدد الركاب مقارنة بمستويات ما قبل الجائحة شهراً بعد شهر؟"
+
+select Month,
+AVG(Subways_Prepandemic) as 'Average Subways Recovery',
+AVG(Buses_Prepandemic) as 'Average Buses Recovery',
+AVG(AAR_Prepandemic) as 'Average AAR Recovery',
+AVG(Bridges_Tunnels_Prepandemic) as 'Average Bridges_Tunnels Recovery',
+AVG(LIRR_Prepandemic) as 'Average LIRR Recovery',
+AVG(MNR_Prepandemic) as 'Average MNR Recovery',
+AVG(SIR_Prepandemic) as 'Average SIR Recovery'
+from MTA_Daily_Ridership
+group by Month
+order by Month asc
+
+Q5-------How did ridership recovery compare to pre-pandemic levels year by year? 
+---------"كيف كانت وتيرة تعافي عدد الركاب مقارنة بمستويات ما قبل الجائحة عاما بعد عام؟"
+
+select Year,
+AVG(Subways_Prepandemic) as 'Average Subways Recovery',
+AVG(Buses_Prepandemic) as 'Average Buses Recovery',
+AVG(AAR_Prepandemic) as 'Average AAR Recovery',
+AVG(Bridges_Tunnels_Prepandemic) as 'Average Bridges_Tunnels Recovery',
+AVG(LIRR_Prepandemic) as 'Average LIRR Recovery',
+AVG(MNR_Prepandemic) as 'Average MNR Recovery',
+AVG(SIR_Prepandemic) as 'Average SIR Recovery'
+from MTA_Daily_Ridership
+group by Year
+order by Year asc
+
+Q6 -----Which day has the highest ridership for each transportation mode? 
+--------"ما هو أكثر يوم ازدحامًا في عدد الركاب لكل وسيلة نقل؟"
+
+SELECT TOP 1 [Date], [Subways_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [Subways_Total_Ridership] DESC
+
+SELECT TOP 1 [Date], [Buses_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [Buses_Total_Ridership] DESC
+
+SELECT TOP 1 [Date], [AAR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [AAR_Total_Ridership] DESC
+
+SELECT TOP 1 [Date], [Bridges_Tunnels_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [Bridges_Tunnels_Total_Ridership] DESC
+
+SELECT TOP 1 [Date], [LIRR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [LIRR_Total_Ridership] DESC
+
+SELECT TOP 1 [Date], [MNR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [MNR_Total_Ridership] DESC
+
+SELECT TOP 1 [Date], [SIR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [SIR_Total_Ridership] DESC
+
+SELECT TOP 1 [Date], [SIR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [SIR_Total_Ridership] DESC
+
+Q7-----Which day has the lowest ridership for each transportation mode? 
+-------"ما هو أقل يوم ازدحامًا من حيث عدد الركاب لكل وسيلة نقل؟"
+
+SELECT TOP 1 [Date], [Subways_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [Subways_Total_Ridership] ASC
+
+SELECT TOP 1 [Date], [Buses_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [Buses_Total_Ridership] ASC
+
+SELECT TOP 1 [Date], [AAR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [AAR_Total_Ridership] ASC
+
+SELECT TOP 1 [Date], [Bridges_Tunnels_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [Bridges_Tunnels_Total_Ridership] ASC
+
+SELECT TOP 1 [Date], [LIRR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [LIRR_Total_Ridership] ASC
+
+SELECT TOP 1 [Date], [MNR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [MNR_Total_Ridership] ASC
+
+SELECT TOP 1 [Date], [SIR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [SIR_Total_Ridership] ASC
+
+SELECT TOP 1 [Date], [SIR_Total_Ridership]
+FROM MTA_Daily_Ridership
+ORDER BY [SIR_Total_Ridership] ASC
+
+Q8-----Which transportation mode recovered the fastest after the pandemic?
+-------"ما هي وسيلة النقل التي تعافت بأسرع وتيرة بعد الجائحة؟"
+
+select TOP 7 [Transport_Mode], AVG(Recovery_Percentage) AS Avg_Recovery
+FROM (
+    SELECT 'Subways' AS Transport_Mode, Subways_Prepandemic AS Recovery_Percentage FROM MTA_Daily_Ridership
+    UNION ALL
+    SELECT 'Buses' AS Transport_Mode, Buses_prepandemic FROM MTA_Daily_Ridership
+    UNION ALL
+	SELECT 'AAR' AS Transport_Mode, AAR_Prepandemic FROM MTA_Daily_Ridership
+    UNION ALL
+	SELECT 'Bridges_Tunnels' AS Transport_Mode, Bridges_Tunnels_Prepandemic FROM MTA_Daily_Ridership
+    UNION ALL
+    SELECT 'LIRR' AS Transport_Mode, LIRR_Prepandemic FROM MTA_Daily_Ridership
+    UNION ALL
+    SELECT 'MNR' AS Transport_Mode, MNR_Prepandemic FROM MTA_Daily_Ridership
+	UNION ALL
+	SELECT 'SIR' AS Transport_Mode, SIR_Prepandemic FROM MTA_Daily_Ridership
+	)
+ AS Recovery_Data
+GROUP BY Transport_Mode
+ORDER BY Avg_Recovery DESC
+
+Q9-----Which transportation mode is most sensitive to the effects of the pandemic?
+-------"ما هي وسيلة النقل الأكثر تأثراً بتداعيات الجائحة؟"
+
+select TOP 1 [Transport_Mode], MIN (Avg_Recovery) As Lowest_Avg_Recovery
+FROM (
+    SELECT 'Subways' AS Transport_Mode, avg(Subways_Prepandemic) AS Avg_Recovery FROM MTA_Daily_Ridership
+    UNION ALL
+    SELECT 'Buses' AS Transport_Mode, avg(Buses_prepandemic) AS Avg_Recovery FROM MTA_Daily_Ridership
+    UNION ALL
+	SELECT 'AAR' AS Transport_Mode, avg(AAR_Prepandemic) AS Avg_Recovery FROM MTA_Daily_Ridership
+    UNION ALL
+	SELECT 'Bridges_Tunnels' AS Transport_Mode, avg(Bridges_Tunnels_Prepandemic) AS Avg_Recovery FROM MTA_Daily_Ridership
+    UNION ALL
+    SELECT 'LIRR' AS Transport_Mode, avg(LIRR_Prepandemic) AS Avg_Recovery FROM MTA_Daily_Ridership
+    UNION ALL
+    SELECT 'MNR' AS Transport_Mode, avg(MNR_Prepandemic) AS Avg_Recovery FROM MTA_Daily_Ridership
+	UNION ALL
+	SELECT 'SIR' AS Transport_Mode, avg(SIR_Prepandemic) AS Avg_Recovery FROM MTA_Daily_Ridership
+	)
+ AS Pandemic_Impact
+GROUP BY Transport_Mode
+ORDER BY Lowest_Avg_Recovery ASC
+
+Q10----Compare the usage among the different branches of railroads year by year?
+-------"قارن استخدام الفروع المختلفة للسكك الحديدية سنةً بعد سنة؟"
+
+select Year,
+sum(LIRR_Total_Ridership) as [Total LIR Passengers],
+sum(MNR_Total_Ridership) as [Total MNR Passengers],
+sum(SIR_Total_Ridership) as [Total SIR Passengers]
+from MTA_Daily_Ridership
+group by Year
+order by Year asc
+
+
+-------------------------------------تم بحمد لله و توفيقه -----------------------------
